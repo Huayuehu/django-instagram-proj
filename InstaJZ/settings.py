@@ -129,3 +129,5 @@ LOGIN_REDIRECT_URL = 'posts' # 在auth中登录成功后会跳转到posts
 LOGOUT_REDIRECT_URL = 'posts'
 
 AUTH_USER_MODEL = 'Insta.InstaUser'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
