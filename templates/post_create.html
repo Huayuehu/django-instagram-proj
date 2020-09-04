@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>New Post</h1>
+<!-- 当有人上传这个form时，将会采取post这个指令；上传内容时，用multipart和form-data的格式压缩和加密传输-->
+<form action="" method="post" enctype="multipart/form-data">
+     <!--在创建form时，都要填上下面这一行来保护form不受网络攻击，这句话是Django自带的  -->
+    {% csrf_token %} 
+    <!-- views会传递把form传递进来，调用.as_p这个函数，这个函数将form中的每个object当做一个paragraph -->
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+{% endblock content %}
+
+

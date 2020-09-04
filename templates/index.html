@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="cards-listing">
+    {% comment %} 遍历object_lsit中的每一个post 每个post是以一行来显示的{% endcomment %}
+    {% for post in object_list %} 
+        <div class="row">
+            <div class="card view-update {{ post.pk }}">
+                <div class="card__panel-head">
+                    <div class="poster__info">
+                        <a href="{% url 'user_detail' post.author.id %}" class="poster__name">
+                            {% if post.author.profile_pic %}
+                                <img class="poster__profilepic" src="{{ post.author.profile_pic.url }}">
+                            {% endif %}
+                            {{ post.author.username }}
+                        </a>
+                        <span class="poster__timestamp">
+                            {{ post.posted_on|timesince }}
+                        </span>
+                    </div>
+                </div>
+                <a href="{% url 'post_detail' post.pk %}">
+                    <img class="card__main-image" src="{{ post.image.url }}">
+                </a>
+                <div class="card__panel-body">
+                    <div class="likes">
+                        {% comment %} 如果这个post的点赞数是有的，则进入显示具体几个点赞数，通过判断count是否大于1来决定like加不加复数 {% endcomment %}
+                        {% if post.get_like_count %}
+                            {{ post.get_like_count }} like{% if post.get_like_count > 1 %}s{% endif %}
+                        {% endif %}
+                    </div>
+                    <section class="input-row">
+                        {% comment %} has_user_liked_post是用户自定义的template language，在app里面创建一个templatetags folder，然后在里面新建一个custom_tags.py {% endcomment %}
+                        <i class="fa {% has_user_liked_post post user %} submit-like" aria-hidden="true"></i>
+                        {% comment %} 作为上面submit-like的sibling来保存post的primary key {% endcomment %}
+                        <div class="hidden-data {{ post.pk }}" style="display: none;">
+                            <span class="post-pk">{{ post.pk }}</span>
+                        </div>
+                    </section>
+
+                    <ul class="comment-list">
+                        <a class="view-more"></a>
+                        {% for comment in post.comments.all %}
+                        <li class="comment-list__comment">
+                            {% comment %} <a href="{% url 'profile' comment.user.pk %}" class="user">
+                                {{ comment.user.username }}
+                            </a> {% endcomment %}
+                            <span class="comment">{{ comment.comment }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
+
